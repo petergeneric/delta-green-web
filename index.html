@@ -78,6 +78,79 @@
 			color: #777;
 		}
 	</style>
+
+	<style>
+		/* Container that will have the glitch effect */
+		.glitch-container {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			z-index: 9999; /* Make sure it appears above all content */
+			pointer-events: none; /* Let clicks pass through to underlying content */
+			animation: glitchEffect 0.2s infinite;
+		}
+
+		/* Create pseudo-elements for RGB splitting effects */
+		.glitch-container::before,
+		.glitch-container::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: inherit;
+			z-index: -1;
+		}
+
+		.glitch-container::before {
+			left: 2px;
+			background-color: rgba(255, 0, 0, 0.2); /* Red channel */
+			animation: glitch-r 0.3s infinite;
+		}
+
+		.glitch-container::after {
+			left: -2px;
+			background-color: rgba(0, 255, 255, 0.2); /* Cyan channel */
+			animation: glitch-b 0.3s infinite;
+		}
+
+		/* Random horizontal noise lines */
+		.noise-line {
+			position: absolute;
+			width: 100%;
+			height: 1px;
+			background-color: rgba(255, 255, 255, 0.8);
+			box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+		}
+
+		/* Define animations */
+		@keyframes glitch-r {
+			0%, 100% { transform: translateX(0); }
+			20% { transform: translateX(4px); }
+			40% { transform: translateX(-4px); }
+			60% { transform: translateX(2px); }
+		}
+
+		@keyframes glitch-b {
+			0%, 100% { transform: translateX(0); }
+			20% { transform: translateX(-4px); }
+			40% { transform: translateX(4px); }
+			60% { transform: translateX(-2px); }
+		}
+
+		@keyframes glitchEffect {
+			0%, 100% { transform: translateX(0); filter: none; }
+			10% { transform: translateX(-5px); }
+			30% { transform: translateX(5px); filter: hue-rotate(90deg); }
+			50% { transform: translateY(2px); clip-path: inset(20% 0 30% 0); }
+			70% { transform: translateX(-2px); filter: invert(50%); }
+			90% { clip-path: inset(10% 0 60% 0); }
+		}
+	</style>
 </head>
 <body>
 <div class="container">
@@ -142,6 +215,7 @@
 
 		{
 			title: "Finding Your Bottle: The Differences Between Rum, Rhum Agricole, and Cachaça",
+			glitch: true,
 			href: "https://vinepair.com/articles/what-is-rum-rhum-agricole-cachaca/",
 			text: "Find your Bottle! The labyrinthine differences between Rum, Rhum Agricole, and Cachaça are explored in this in-depth article by guest writer Nicole. We are often asked how can I find my bottle - well in this guide we'll go over how to find the right spirit for you"
 		},
@@ -172,9 +246,15 @@
 
 		let resultsFound = 0;
 
+
+		let didFindGlitch = false;
+
 		searchData.forEach(item => {
 			if (item.text.toLowerCase().includes(searchQuery)) {
 				resultsFound++;
+
+				if (item.glitch)
+					didFindGlitch = true;
 
 				const resultItem = document.createElement('div');
 				resultItem.className = 'result-item';
@@ -234,6 +314,10 @@
 			resultCount.textContent = `About ${resultsFound} results`;
 			resultsContainer.insertBefore(resultCount, resultsContainer.firstChild);
 		}
+
+		if (didFindGlitch) {
+			triggerGlitch();
+		}
 	}
 
 	// Function to get URL parameters
@@ -284,6 +368,42 @@
 		}
 	};
 
+
+
+
+	function playGlitchSound() {
+		// Play a random glitch sound
+		const audio = new Audio('glitch-fx-transitions-6-311803.mp3');
+		audio.volume = 0.3; // Set volume to 30%
+		audio.play();
+	}
+
+
+
+	function triggerVisualGlitch() {
+		const glitchElement = document.createElement('div');
+		glitchElement.className = 'glitch-container';
+
+		// Add some random noise lines
+		for (let i = 0; i < 10; i++) {
+			const line = document.createElement('div');
+			line.className = 'noise-line';
+			line.style.top = `${Math.random() * 100}%`;
+			glitchElement.appendChild(line);
+		}
+
+		document.body.appendChild(glitchElement);
+
+		// Remove after short duration
+		setTimeout(() => {
+			document.body.removeChild(glitchElement);
+		}, 250); // Half a second
+	}
+
+	function triggerGlitch() {
+		triggerVisualGlitch();
+		playGlitchSound();
+	}
 
 </script>
         <div class="footer">
