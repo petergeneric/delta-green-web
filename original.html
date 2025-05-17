@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .search-container {
+            text-align: center;
+            margin-top: 100px;
+        }
+        
+        .search-box {
+            width: 600px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        
+        .search-logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .search-logo span:nth-child(1) { color: #4285F4; }
+        .search-logo span:nth-child(2) { color: #EA4335; }
+        .search-logo span:nth-child(3) { color: #FBBC05; }
+        .search-logo span:nth-child(4) { color: #4285F4; }
+        .search-logo span:nth-child(5) { color: #34A853; }
+        .search-logo span:nth-child(6) { color: #EA4335; }
+        
+        .result-item {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .result-title {
+            color: #1a0dab;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-decoration: none;
+        }
+        
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        
+        .result-url {
+            color: #006621;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .result-text {
+            color: #4d5156;
+            font-size: 0.9rem;
+        }
+        
+        #search-results {
+            margin-top: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-container">
+            <div class="search-logo">
+                <span>F</span><span>i</span><span>n</span><span>d</span><span>y</span><span>!</span>
+            </div>
+            <div class="search-box input-group mb-3">
+                <input type="text" id="search-input" class="form-control" placeholder="Search...">
+                <button class="btn btn-primary search-button" type="button" id="search-button">Search</button>
+            </div>
+        </div>
+        
+        <div id="search-results"></div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Dummy JSON data
+        const searchData = [
+            {
+                title: "Dorchester House Hospital",
+				link: "/dorchester-house/",
+                href: "https://www.dorchesterhousehospital.com",
+                text: "Dorchester House Hospital provides exceptional healthcare services to the community. Our experienced medical staff and modern facilities ensure the highest quality care for all patients."
+            },
+
+			{
+				title: "Ars Goetia Online",
+				href: "https://demonweb101.com/",
+				text: "Whatever you can do, or dream you can do, begin it. Boldness has genius, power, and magic in it! The Preliminary Invocation to Primeumaton Primeumaton is Greek for “Thou Who Art the First and Last.” The preliminary invocation prays for the protection of angels and Yahweh in the dangerous work of compelling demonic powers under their command. The invocation begins with elaborate ceremonial preparations involving a sword, vessels for divination and conjuration, wax figures, scrolls written in blood, a ring, a ceremonial staff, special clothing, a garland, and careful timing according to arcane rules of astrology. Consult your grimoires for the most efficacious preparations. Draw a Solomonic Triangle marked with the words “ANAPHAXETON, ANAPHANETON, PRIMEUMATON” in a protective circle, in an isolated, enclosed area. Now, announce the names of the 72 demons subject to command: Aamon Agares Aim Alocer Amdusias Andras Andrealphus Andromalius Asmoday Astaroth Avnas Bael Balam Barbatos Bathin Beleth Belial Berith Bifrons Botis Buer Buné Camio Crocell Dantalion Decarabia Eligos Flauros Focalor Foras Forneus Furcas Furfur Gaap Glasya Gremory Guison Haagenti Ipos Kimaris Lejare Malphas Malthus Marbas Marchosias Morax Murmur Naberius Orabas Orais Ose Paimon Phenex Purson Raum Ronové Sabnock Saleos Samigina Seere Shax Sitri Stolas Valac Valefar Vapula Vassago Vepar Vinea Vual Zagan Zepar Inscribe the seal of the particular demon you wish to contact. After the ritual is complete, the demon shall make itself known."
+
+			},
+
+			{
+				title: "Encounter Group",
+				link: "offline.html",
+				href: "www.facebook.com/encounter-group-therapy",
+				text: "The Encounter Group - Find Strength in Community – Join Our Self-Help Group in Boston Feeling stuck? Overwhelmed? You're not alone—and you don't have to face it alone either. Our Boston-based self-help group offers a safe, supportive space for individuals seeking growth, connection, and a fresh perspective on life's challenges. Whether you're navigating stress, life transitions, or simply looking to build resilience, our weekly gatherings provide encouragement, tools, and camaraderie. Come as you are—no judgment, no pressure. When: Every Tuesday evening Where: Community Room, Back Bay Wellness Center, Boston, MA Time: 6:30 PM – 8:00 PM Cost: Free (donations welcome). Anonymity guaranteed."
+			},
+        ];
+
+        // Function to perform the search
+        function performSearch() {
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            resultsContainer.innerHTML = '';
+            
+            if (searchQuery.trim() === '') {
+                return;
+            }
+            
+            let resultsFound = 0;
+            
+            searchData.forEach(item => {
+                if (item.text.toLowerCase().includes(searchQuery)) {
+                    resultsFound++;
+                    
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    
+                    const resultTitle = document.createElement('a');
+                    resultTitle.className = 'result-title';
+                    resultTitle.href = item.link || item.href;
+                    resultTitle.textContent = item.title;
+                    resultTitle.target = '_blank';
+                    
+                    const resultUrl = document.createElement('div');
+                    resultUrl.className = 'result-url';
+                    resultUrl.textContent = item.href;
+                    
+                    const resultText = document.createElement('div');
+                    resultText.className = 'result-text';
+                    
+                    // Highlight the matching text
+                    const lowerText = item.text.toLowerCase();
+                    const startIndex = lowerText.indexOf(searchQuery);
+                    const endIndex = startIndex + searchQuery.length;
+                    
+                    let displayText = item.text;
+                    if (startIndex > 30) {
+                        displayText = '...' + item.text.substring(startIndex - 30);
+                    }
+                    if (displayText.length > 200) {
+                        displayText = displayText.substring(0, 200) + '...';
+                    }
+                    
+                    // Create highlight by wrapping the matched text in a span
+                    const highlightedText = displayText.replace(
+                        new RegExp(searchQuery, 'gi'), 
+                        match => `<strong style="background-color: yellow;">${match}</strong>`
+                    );
+                    
+                    resultText.innerHTML = highlightedText;
+                    
+                    resultItem.appendChild(resultTitle);
+                    resultItem.appendChild(resultUrl);
+                    resultItem.appendChild(resultText);
+                    
+                    resultsContainer.appendChild(resultItem);
+                }
+            });
+            
+            if (resultsFound === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center mt-4">
+                        <p>No results found for "${searchQuery}"</p>
+                    </div>
+                `;
+            } else {
+                // Add result count
+                const resultCount = document.createElement('div');
+                resultCount.className = 'mb-4 text-secondary';
+                resultCount.textContent = `About ${resultsFound} results`;
+                resultsContainer.insertBefore(resultCount, resultsContainer.firstChild);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('search-button').addEventListener('click', performSearch);
+        document.getElementById('search-input').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
