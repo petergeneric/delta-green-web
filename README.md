@@ -1,6 +1,7 @@
 ## Delta Green Search Engine
 
 ![Sample Screenshot](./readme/example.png)
+See https://petergeneric.github.io/delta-green-web/ for live demo
 
 ## Deployment
 
