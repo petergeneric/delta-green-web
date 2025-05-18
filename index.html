@@ -422,7 +422,8 @@
 	// Function to update URL
 	function updateUrl(query) {
 		document.title = 'Finder Search: ' + query;
-		const url = query ? `?q=${encodeURIComponent(query)}` : window.location.pathname;
+
+		const url = query ? `?${new URLSearchParams({q: query}).toString()}` : window.location.pathname;
 		window.history.pushState({query}, '', url);
 	}
 
