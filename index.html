@@ -261,7 +261,7 @@
 		/**
 		 * @type {{gameStage: number, stages: {string: string}, records: [{title: string, link: string, href: string, text: string, type: string, glitch?: boolean, notBefore?: number, notAfter?: number}]}}
 		 */
-		const database = await (await fetch('database.json')).json();
+		const database = await (await fetch('database-v2.json')).json();
 		const searchData = database.records
 			.filter(item => !item.notBefore || item.notBefore >= database.gameStage)
 			.filter(item => !item.notAfter || item.notAfter <= database.gameStage);
@@ -293,6 +293,7 @@
 
 					const resultTitle = document.createElement('a');
 					resultTitle.className = 'result-title';
+
 					resultTitle.href = item.link || item.href || "offline.html";
 					resultTitle.textContent = item.title;
 					resultTitle.target = '_blank';
