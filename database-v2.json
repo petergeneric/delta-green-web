@@ -75,6 +75,13 @@
 			"type": "easter_egg"
 		},
 		{
+			"title": "Boston Energy: Powering Efficiency",
+			"link": "./boston-energy.com/",
+			"href": "www.boston-energy.com",
+			"text": "Boston Energy provides bespoke client-tailored energy efficiency solutions. Founded and steered by Erin Thornberry-Jones in 2005, supported by senior consultants Bob Tinstale and Emily Thompson, harmonizing your business energy needs has never been simpler. Why not arrange a chat with our experts today?",
+			"type": "easter_egg"
+		},
+		{
 			"title": "Book Review: Surely You Can't be Seereious Mr Fineman",
 			"link": "offline.html",
 			"href": "https://bazzo-reviews.com/reviews/books/fineman-autobiography",
@@ -157,6 +164,13 @@
 			"href": "www.dorchesterhousehospital.com",
 			"text": "Dorchester House Hospital provides exceptional healthcare services to the community. Our experienced medical staff and modern facilities ensure the highest quality care for all patients. Head Clinician and Medical Director Dr Richard Dallan: Board-certified psychiatrist with over 15 years of experience in treating complex mental health conditions.",
 			"type": "impossible_landscapes"
+		},
+		{
+			"title": "Boston Green Places",
+			"link": "offline.html",
+			"href": "www.greenplaces.org/ma/boston",
+			"text": "Green Places around Boston MA: the best parks and hikes for you and your family",
+			"type": "filler"
 		},
 		{
 			"title": "Ars Goetia Online",
