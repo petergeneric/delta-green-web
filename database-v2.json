@@ -13,7 +13,7 @@
 		},
 		{
 			"title": "Yelp - Gateway Bridges",
-			"link": "gateway_bridges/review.png",
+			"link": "yelp.com/gateway-bridges.png",
 			"href": "www.yelp.com/biz/gateway-bridges-boston",
 			"text": "Gateway Bridges Restaurant reviews for Boston, MA. Get up on the latest and tastiest restaurants around the Boston MA area exclusively on yelp!",
 			"type": "impossible_landscapes"
@@ -69,7 +69,7 @@
 		{
 			"title": "Arch Angel: Your one-stop shop for decorative and functional architraves",
 			"glitch": true,
-			"link": "./arch-angel/",
+			"link": "./arch-angel.com",
 			"href": "www.arch-angel.com",
 			"text": "Arch Angel isn't sci-fi, it's reality! We stock only the finest architraves and arches, and provide you only the best quality at the lowest prices. Arch Angel is a product of Archangel Building Supplies Inc",
 			"type": "easter_egg"
