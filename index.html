@@ -268,7 +268,7 @@
 
 		// Function to perform the search
 		function performSearch() {
-			const searchQuery = document.getElementById('search-input').value.toLowerCase();
+			let searchQuery = document.getElementById('search-input').value;
 			const resultsContainer = document.getElementById('search-results');
 			resultsContainer.innerHTML = '';
 
@@ -281,8 +281,10 @@
 
 			let didFindGlitch = false;
 
+			searchQuery = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 			searchData.forEach(item => {
-				if (item.text.toLowerCase().includes(searchQuery)) {
+				if (new RegExp(`(^|\\W)${searchQuery}`, 'i').test(item.text)) {
 					resultsFound++;
 
 					if (item.glitch)
