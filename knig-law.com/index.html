@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyes Norris Ingalls Grant and Associates | Attorneys at Law</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            color: #2c3e50;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a1a1a;
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+        
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .firm-name {
+            color: #fff;
+        }
+        
+        .firm-name h1 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .firm-name p {
+            font-size: 14px;
+            color: #c9a961;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        /* Navigation */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #c9a961;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSI2MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjE5MjAiIGhlaWdodD0iNjAwIiBmaWxsPSIjMmMzZTUwIi8+CiAgPGcgb3BhY2l0eT0iMC4xIj4KICAgIDxwYXRoIGQ9Ik0wLDAgTDE5MjAsNjAwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMSIvPgogICAgPHBhdGggZD0iTTAsMTAwIEwxOTIwLDcwMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEiLz4KICAgIDxwYXRoIGQ9Ik0wLDIwMCBMMTkyMCw4MDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgPC9nPgo8L3N2Zz4=');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #c9a961;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #c9a961;
+            color: #1a1a1a;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            border: 2px solid #c9a961;
+        }
+        
+        .cta-button:hover {
+            background-color: transparent;
+            color: #c9a961;
+        }
+        
+        /* Practice Areas */
+        .practice-areas {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 50px;
+            color: #1a1a1a;
+            letter-spacing: 1px;
+        }
+        
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .area-card {
+            text-align: center;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .area-card:hover {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+        
+        .area-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            color: #c9a961;
+        }
+        
+        .area-card h3 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+        
+        .area-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        
+        /* Contact Section */
+        .contact {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 60px 0;
+        }
+        
+        .contact-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            color: #c9a961;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-item p {
+            line-height: 1.8;
+        }
+        
+        .contact-item a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            color: #c9a961;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #0f0f0f;
+            color: #999;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .hero h2 {
+                font-size: 36px;
+            }
+            
+            .firm-name h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Scales of Justice Logo -->
+                            <circle cx="50" cy="50" r="48" fill="none" stroke="#c9a961" stroke-width="2"/>
+                            <!-- Base -->
+                            <rect x="45" y="70" width="10" height="20" fill="#c9a961"/>
+                            <rect x="30" y="88" width="40" height="4" fill="#c9a961"/>
+                            <!-- Pillar -->
+                            <rect x="48" y="20" width="4" height="50" fill="#c9a961"/>
+                            <!-- Balance beam -->
+                            <rect x="20" y="18" width="60" height="4" fill="#c9a961"/>
+                            <!-- Left scale -->
+                            <line x1="25" y1="22" x2="25" y2="35" stroke="#c9a961" stroke-width="2"/>
+                            <path d="M15 35 L35 35 L30 45 L20 45 Z" fill="none" stroke="#c9a961" stroke-width="2"/>
+                            <!-- Right scale -->
+                            <line x1="75" y1="22" x2="75" y2="35" stroke="#c9a961" stroke-width="2"/>
+                            <path d="M65 35 L85 35 L80 45 L70 45 Z" fill="none" stroke="#c9a961" stroke-width="2"/>
+                            <!-- Decorative elements -->
+                            <circle cx="50" cy="20" r="3" fill="#c9a961"/>
+                        </svg>
+                    </div>
+                    <div class="firm-name">
+                        <h1>KEYES NORRIS INGALLS GRANT</h1>
+                        <p>and Associates</p>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#practice">Practice Areas</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#attorneys">Attorneys</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Excellence in Legal Representation</h2>
+            <p>Trusted Counsel. Proven Results. Since 1999.</p>
+            <a href="#contact" class="cta-button">Schedule Consultation</a>
+        </div>
+    </section>
+
+    <section class="practice-areas" id="practice">
+        <div class="container">
+            <h2 class="section-title">Our Practice Areas</h2>
+            <div class="areas-grid">
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <h3>Corporate Law</h3>
+                    <p>Comprehensive legal services for businesses of all sizes, from startups to established corporations.</p>
+                </div>
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                    </div>
+                    <h3>Real Estate</h3>
+                    <p>Expert guidance in commercial and residential real estate transactions, development, and litigation.</p>
+                </div>
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.19 14.19L12 15l-1.19 1.19-4.2-4.2L12 6.6l5.39 5.39-4.2 4.2z"/>
+                        </svg>
+                    </div>
+                    <h3>Litigation</h3>
+                    <p>Aggressive representation in complex commercial disputes, civil litigation, and appellate matters.</p>
+                </div>
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                        </svg>
+                    </div>
+                    <h3>Tax Law</h3>
+                    <p>Strategic tax planning and representation before federal and state tax authorities.</p>
+                </div>
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Estate Planning</h3>
+                    <p>Sophisticated estate planning strategies to protect and preserve wealth for future generations.</p>
+                </div>
+                <div class="area-card">
+                    <div class="area-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+                        </svg>
+                    </div>
+                    <h3>Employment Law</h3>
+                    <p>Counsel on employment agreements, discrimination claims, and workplace compliance matters.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">About Our Firm</h2>
+            <div class="about-content">
+                <p>For over a decade, Keyes Norris Ingalls Grant and Associates has provided exceptional legal services to individuals, businesses, and institutions throughout the region. Our firm combines the resources and expertise of a large practice with the personalized attention and responsiveness of a boutique firm.</p>
+                <p>Our attorneys bring extensive experience across multiple practice areas, allowing us to handle complex matters that require interdisciplinary expertise. We are committed to achieving optimal outcomes for our clients through strategic thinking, meticulous preparation, and unwavering advocacy.</p>
+                <p>At Keyes Norris Ingalls Grant and Associates, we understand that legal challenges can be overwhelming. That's why we prioritize clear communication, transparency, and building lasting relationships with our clients based on trust and mutual respect.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-item">
+                    <h3>Office Location</h3>
+                    <p>500 Commerce Street<br>
+                    Suite 1200<br>
+                    Metropolitan Tower<br>
+                    New York, NY 10013</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Contact Information</h3>
+                    <p>Phone: <a href="tel:+12125551000">(212) 555-1000</a><br>
+                    Fax: (212) 555-1001<br>
+                    Email: <a href="mailto:info@kniglaw.com">info@kniglaw.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>Office Hours</h3>
+                    <p>Monday - Friday<br>
+                    8:30 AM - 6:00 PM<br>
+                    <br>
+                    24/7 Emergency Line Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2015 Keyes Norris Ingalls Grant and Associates. All rights reserved. | Attorney Advertising | Prior results do not guarantee a similar outcome.</p>
+        </div>
+    </footer>
+</body>
+</html>
