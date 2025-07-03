@@ -18,5 +18,13 @@
 </head>
 <body>
 <iframe id="content-frame" src="../wordsearch.com/?locale=pl"></iframe>
+<script>
+	const iframe = document.getElementById('content-frame');
+
+	// Focus the iframe once it's loaded
+	iframe.addEventListener('load', function() {
+		iframe.focus();
+	});
+</script>
 </body>
 </html>

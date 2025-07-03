@@ -17,6 +17,32 @@
             align-items: center;
         }
 
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .mode-button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background: #d3d6da;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-button.active {
+            background: #6aaa64;
+            color: white;
+        }
+
         .header {
             text-align: center;
             color: white;
@@ -171,6 +197,40 @@
             font-size: 1.2em;
         }
 
+        .hangman-container {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .hangman-drawing {
+            width: 200px;
+            height: 250px;
+            margin: 0 auto;
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .hangman-word {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hangman-letter {
+            width: 30px;
+            height: 40px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .cell {
                 width: 20px;
@@ -194,12 +254,27 @@
     <div class="subtitle">Der Ultimate Deutsche Wortspiel!</div>
 </div>
 
+<div class="mode-selector">
+    <button id="wordle-mode" class="mode-button active">WordyGuess(tm) Mode</button>
+    <button id="hangman-mode" class="mode-button">Hangman Mode</button>
+</div>
+
 <div class="word-hint">
     <strong>Hinweis:</strong> Es ist lang
 </div>
 
 <div class="game-container">
-    <div class="grid" id="grid"></div>
+    <div id="wordle-container">
+        <div class="grid" id="grid"></div>
+    </div>
+    <div id="hangman-container" class="hangman-container">
+        <div class="hangman-drawing" id="hangman-drawing">
+            <!-- Hangman drawing will be added here by JavaScript -->
+        </div>
+        <div class="hangman-word" id="hangman-word">
+            <!-- Hangman word display will be added here by JavaScript -->
+        </div>
+    </div>
     <div class="message" id="message"></div>
     <div class="keyboard" id="keyboard"></div>
 </div>
@@ -231,6 +306,22 @@
                 ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'Ü', 'Ä', 'Ö'],
                 ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ß', '⌫', '⏎'],
                 ['Y', 'X', 'C', 'V', 'B', 'N', 'M', '', '', '', '', '', '']
+            ]
+        },
+
+        dev: {
+            options: {
+                'boop':'it\'s boop',
+            },
+            hint: 'Hint',
+            brand: 'Word Search - Debug Mode',
+            flag: '[-]',
+            strapline: 'Everybody\'s favourite debug mode!',
+
+            keyboard: [
+                ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'Ü', 'Ä', 'Ö'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ß', '⌫', '⏎'],
+                ['Y', 'X', 'C', 'V', 'B', 'N', 'M', '-', '', '', '', '', '']
             ]
         },
 
@@ -302,6 +393,9 @@
     let currentRow = 0;
     let currentCol = 0;
     let gameOver = false;
+    let gameMode = 'wordle'; // Default game mode
+    let wrongGuesses = 0;
+    let guessedLetters = [];
 
 
     function initializeGrid() {
@@ -338,12 +432,33 @@
     function handleKeyPress(key) {
         if (gameOver) return;
 
-        if (key === '⌫') {
-            deleteLetter();
-        } else if (key === '⏎') {
-            submitGuess();
+        if (gameMode === 'wordle') {
+            // Wordle mode key handling
+            if (key === '⌫') {
+                deleteLetter();
+            } else if (key === '⏎') {
+                submitGuess();
+            } else {
+                addLetter(key);
+            }
         } else {
-            addLetter(key);
+            // Hangman mode key handling
+            if (key === '⌫' || key === '⏎') {
+                // These keys don't do anything in hangman mode
+                return;
+            } else {
+                // Check if the letter has already been guessed
+                if (guessedLetters.includes(key)) {
+                    showMessage(`You already guessed ${key}!`);
+                    return;
+                }
+
+                // Add to guessed letters
+                guessedLetters.push(key);
+
+                // Check the guess
+                checkHangmanGuess(key);
+            }
         }
     }
 
@@ -472,9 +587,164 @@
         }
     });
 
+    // Mode switching functions
+    function switchToWordleMode() {
+        gameMode = 'wordle';
+        document.getElementById('wordle-mode').classList.add('active');
+        document.getElementById('hangman-mode').classList.remove('active');
+        document.getElementById('wordle-container').style.display = 'block';
+        document.getElementById('hangman-container').style.display = 'none';
+        resetGame();
+    }
+
+    function switchToHangmanMode() {
+        gameMode = 'hangman';
+        document.getElementById('hangman-mode').classList.add('active');
+        document.getElementById('wordle-mode').classList.remove('active');
+        document.getElementById('wordle-container').style.display = 'none';
+        document.getElementById('hangman-container').style.display = 'block';
+        resetGame();
+    }
+
+    function resetGame() {
+        // Reset game state
+        currentRow = 0;
+        currentCol = 0;
+        gameOver = false;
+        wrongGuesses = 0;
+        guessedLetters = [];
+
+        // Clear the grid
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        // Clear the keyboard
+        const keyboard = document.getElementById('keyboard');
+        keyboard.innerHTML = '';
+
+        // Clear the hangman word display
+        const hangmanWord = document.getElementById('hangman-word');
+        hangmanWord.innerHTML = '';
+
+        // Clear the hangman drawing
+        const hangmanDrawing = document.getElementById('hangman-drawing');
+        hangmanDrawing.innerHTML = '';
+
+        // Initialize the game based on the current mode
+        if (gameMode === 'wordle') {
+            initializeGrid();
+            initializeKeyboard();
+            showMessage(`Guess the word! Attempt 1 of ${MAX_ATTEMPTS}`);
+        } else {
+            initializeHangman();
+            initializeKeyboard(); // Reuse the keyboard for hangman
+            showMessage(`Guess the word! You have 6 wrong guesses.`);
+        }
+    }
+
+    function initializeHangman() {
+        // Create the hangman drawing scaffold
+        const hangmanDrawing = document.getElementById('hangman-drawing');
+        hangmanDrawing.innerHTML = `
+            <svg width="200" height="250" viewBox="0 0 200 250">
+                <!-- Base -->
+                <line x1="20" y1="230" x2="180" y2="230" stroke="#333" stroke-width="3"/>
+                <!-- Vertical pole -->
+                <line x1="40" y1="230" x2="40" y2="30" stroke="#333" stroke-width="3"/>
+                <!-- Horizontal beam -->
+                <line x1="40" y1="30" x2="120" y2="30" stroke="#333" stroke-width="3"/>
+                <!-- Rope -->
+                <line x1="120" y1="30" x2="120" y2="50" stroke="#333" stroke-width="3"/>
+
+                <!-- These parts will be added as wrong guesses are made -->
+                <circle id="head" cx="120" cy="70" r="20" stroke="#333" stroke-width="3" fill="transparent" style="display:none"/>
+                <line id="body" x1="120" y1="90" x2="120" y2="150" stroke="#333" stroke-width="3" style="display:none"/>
+                <line id="left-arm" x1="120" y1="110" x2="90" y2="100" stroke="#333" stroke-width="3" style="display:none"/>
+                <line id="right-arm" x1="120" y1="110" x2="150" y2="100" stroke="#333" stroke-width="3" style="display:none"/>
+                <line id="left-leg" x1="120" y1="150" x2="90" y2="180" stroke="#333" stroke-width="3" style="display:none"/>
+                <line id="right-leg" x1="120" y1="150" x2="150" y2="180" stroke="#333" stroke-width="3" style="display:none"/>
+            </svg>
+        `;
+
+        // Create the hangman word display
+        const hangmanWord = document.getElementById('hangman-word');
+        hangmanWord.innerHTML = '';
+
+        for (let i = 0; i < TARGET_WORD.length; i++) {
+            const letterBox = document.createElement('div');
+            letterBox.className = 'hangman-letter';
+            letterBox.id = `hangman-letter-${i}`;
+
+            // Handle spaces and hyphens
+            if (TARGET_WORD[i] === ' ' || TARGET_WORD[i] === '-') {
+                letterBox.textContent = TARGET_WORD[i];
+            }
+
+            hangmanWord.appendChild(letterBox);
+        }
+    }
+
+    function updateHangmanDrawing() {
+        const parts = ['head', 'body', 'left-arm', 'right-arm', 'left-leg', 'right-leg'];
+        if (wrongGuesses > 0 && wrongGuesses <= parts.length) {
+            document.getElementById(parts[wrongGuesses - 1]).style.display = 'block';
+        }
+    }
+
+    function checkHangmanGuess(letter) {
+        let letterFound = false;
+
+        // Check if the letter is in the target word
+        for (let i = 0; i < TARGET_WORD.length; i++) {
+            if (TARGET_WORD[i] === letter) {
+                document.getElementById(`hangman-letter-${i}`).textContent = letter;
+                letterFound = true;
+            }
+        }
+
+        // Update game state based on the guess
+        if (!letterFound) {
+            wrongGuesses++;
+            updateHangmanDrawing();
+            updateKeyboard(letter, 'absent');
+
+            if (wrongGuesses >= 6) {
+                showMessage(`Sorry! The word was: ${TARGET_WORD}`, 'lose');
+                gameOver = true;
+            }
+        } else {
+            updateKeyboard(letter, 'correct');
+
+            // Check if all letters have been guessed
+            let allLettersGuessed = true;
+            for (let i = 0; i < TARGET_WORD.length; i++) {
+                const letterElement = document.getElementById(`hangman-letter-${i}`);
+                if (TARGET_WORD[i] !== ' ' && TARGET_WORD[i] !== '-' && letterElement.textContent === '') {
+                    allLettersGuessed = false;
+                    break;
+                }
+            }
+
+            if (allLettersGuessed) {
+                showMessage('Congratulations!', 'win');
+                gameOver = true;
+            }
+        }
+    }
+
+    // Add event listeners for mode buttons
+    document.getElementById('wordle-mode').addEventListener('click', switchToWordleMode);
+    document.getElementById('hangman-mode').addEventListener('click', switchToHangmanMode);
+
     // Initialize game
     initializeGrid();
     initializeKeyboard();
+    initializeHangman(); // Initialize hangman mode as well
+
+    // Set initial display states
+    document.getElementById('wordle-container').style.display = 'block';
+    document.getElementById('hangman-container').style.display = 'none';
+
     showMessage(`Guess the word! Attempt 1 of ${MAX_ATTEMPTS}`);
 </script>
 </body>
