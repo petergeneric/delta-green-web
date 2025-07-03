@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" value="notranslate">
+    <title>Vokabelwortfindungsherausforderung</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        .word-hint {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            max-width: 100%;
+            width: 90vw;
+            max-width: 1200px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(var(--wordlen, 43), 1fr);
+            gap: 2px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .cell {
+            width: 25px;
+            height: 25px;
+            border: 2px solid #d3d6da;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 12px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .cell.filled {
+            border-color: #878a8c;
+            background: #f8f9fa;
+        }
+
+        .cell.correct {
+            background: #6aaa64;
+            color: white;
+            border-color: #6aaa64;
+            animation: flip 0.6s ease-in-out;
+        }
+
+        .cell.present {
+            background: #c9b458;
+            color: white;
+            border-color: #c9b458;
+            animation: flip 0.6s ease-in-out;
+        }
+
+        .cell.absent {
+            background: #787c7e;
+            color: white;
+            border-color: #787c7e;
+            animation: flip 0.6s ease-in-out;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0); }
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 3px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .key {
+            padding: 10px 8px;
+            border: none;
+            border-radius: 4px;
+            background: #d3d6da;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .key:hover {
+            background: #bbb;
+        }
+
+        .key.correct {
+            background: #6aaa64;
+            color: white;
+        }
+
+        .key.present {
+            background: #c9b458;
+            color: white;
+        }
+
+        .key.absent {
+            background: #787c7e;
+            color: white;
+        }
+
+        .key.wide {
+            grid-column: span 2;
+        }
+
+        .message {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        .win {
+            color: #6aaa64;
+            font-size: 1.2em;
+        }
+
+        .lose {
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .cell {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+            }
+            .key {
+                padding: 8px 4px;
+                font-size: 10px;
+                min-height: 35px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>🇩🇪 Vokabelwortfindungsherausforderung 🇩🇪</h1>
+    <div class="subtitle">Der Ultimate Deutsche Wortspiel!</div>
+</div>
+
+<div class="word-hint">
+    <strong>Hinweis:</strong> Es ist lang
+</div>
+
+<div class="game-container">
+    <div class="grid" id="grid"></div>
+    <div class="message" id="message"></div>
+    <div class="keyboard" id="keyboard"></div>
+</div>
+
+<script>
+    const localisations = {
+        de: {
+            options: {
+                'Vokabelwortfindungsherausforderung':'Es ist lang',
+                'Donaudampfschifffahrtsgesellschaftskapitän':'Es ist lang',
+                'Rechtsschutzversicherungsgesellschaften':'Es ist lang',
+                'Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz':'Es ist lang',
+                'Betäubungsmittelverschreibungsverordnung':'Es ist lang',
+                'Grundstücksverkehrsgenehmigungszuständigkeitsübertragunsverordnung':'Es ist lang',
+                'Sozialversicherungsfachangestelltenauszubildender':'Es ist lang',
+                'Straßenverkehrszulassungsordnung':'Es ist lang',
+                'Vierhundertvierundvierzigtausendvierhundertvierundvierzig':'Es ist lang',
+                'Arbeitsunfähigkeitsbescheinigung':'Es ist lang',
+                'Nahrungsmittelunverträglichkeitstest':'Es ist lang',
+                'Wiederbelebungsmaßnahmenleitfaden':'Es ist lang',
+                'Selbstmitgefühlskultivierungstechniken':'Es ist lang'
+            },
+            hint: 'Hinweis',
+            brand: 'Vokabelwortfindungsherausforderung',
+            flag: '🇩🇪',
+            strapline: 'Der Ultimate Deutsche Wortspiel!',
+
+            keyboard: [
+                ['Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'Ü', 'Ä', 'Ö'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ß', '⌫', '⏎'],
+                ['Y', 'X', 'C', 'V', 'B', 'N', 'M', '', '', '', '', '', '']
+            ]
+        },
+
+        pl: {
+            options: {
+                'Dziewięćsetdziewięćdziesięciodziewięcionarodowościowego': 'To prawdopodobnie prawdziwe słowo',
+                'KONSTANTYNOPOLITAŃCZYKOWIANECZKA': 'To prawdopodobnie prawdziwe słowo',
+                'Pierogi': 'To prawdopodobnie prawdziwe słowo',
+            },
+            hint: 'Wskazówka',
+            brand: 'Polskie Słówko',
+            flag: '🇵🇱',
+            strapline: 'Najlepsza wyszukiwarka słów po polsku niezwiązana z Wordle',
+
+            keyboard: [
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Ą', 'Ę'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ł', '⌫'],
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Ć', 'Ń', 'Ó', 'Ś', '⏎'],
+                ['', '', '', '', '', '', '', 'Ź', 'Ż', '', '', '']
+            ]
+        },
+
+
+        za: {
+            options: {
+                'Elektrisiteitvoorsieningsonderbreking': 'Baie Suid-Afrikaners het hierdie probleem as gevolg van onderbefondsing van infrastruktuur.',
+                'Tweedehandsemotorverkoopsmannevakbondstakingsvergaderingsameroeperstoespraakskrywerspersverklaringuitreikingsmediakonferensie-aankondiginkie': '141 letters en nie een van julle sal dit raai nie',
+                'Waatlemoensaaiseisoen': 'Tyd om sappige vrugte te plant',
+                'Vietsrykompetisiebeplanner': '!'
+            },
+            hint: 'Wenk',
+            brand: 'Afrikaanse Woordspel',
+            flag: '🇿🇦',
+            strapline: 'Raai die Afrikaanse woord',
+
+            keyboard: [
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'Ê'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '⌫'],
+                ['Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Ë', 'Î', 'Ô', '⏎'],
+                ['-', '', '', '', '', '', '', 'Û', '', '', '']
+            ]
+        },
+    };
+
+    const languageCode = new URLSearchParams(window.location.search).get('locale') || 'de';
+    const board = localisations[languageCode];
+
+
+    const entries = Object.entries(board.options);
+    const randomEntry = entries[Math.floor(Math.random() * entries.length)];
+    const TARGET_WORD = randomEntry[0].toUpperCase();
+    const HINT = randomEntry[1];
+
+
+    document.querySelector('.word-hint').innerHTML = `<strong>${board.hint}:</strong> ${HINT}`;
+    document.querySelector('.subtitle').innerHTML = board.strapline;
+    window.title = board.brand;
+    document.title = board.brand;
+    document.querySelector('h1').innerText = `${board.flag} ${window.title} ${board.flag}`;
+
+    const MAX_ATTEMPTS = 6;
+    const KEYBOARD_LAYOUT = board.keyboard;
+    const WORD_LENGTH = TARGET_WORD.length;
+
+    document.documentElement.style.setProperty('--keybwidth', KEYBOARD_LAYOUT[0].length);
+    document.documentElement.style.setProperty('--wordlen', WORD_LENGTH);
+    console.log(`Word Length: ${WORD_LENGTH}`);
+
+    let currentRow = 0;
+    let currentCol = 0;
+    let gameOver = false;
+
+
+    function initializeGrid() {
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < MAX_ATTEMPTS * WORD_LENGTH; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.id = `cell-${i}`;
+            grid.appendChild(cell);
+        }
+    }
+
+    function initializeKeyboard() {
+        const keyboard = document.getElementById('keyboard');
+
+        KEYBOARD_LAYOUT.forEach(row => {
+            row.forEach(key => {
+                if (key === '') return;
+
+                const button = document.createElement('button');
+                button.className = 'key';
+                button.textContent = key;
+
+                if (key === '⌫' || key === '⏎') {
+                    button.className += ' wide';
+                }
+
+                button.addEventListener('click', () => handleKeyPress(key));
+                keyboard.appendChild(button);
+            });
+        });
+    }
+
+    function handleKeyPress(key) {
+        if (gameOver) return;
+
+        if (key === '⌫') {
+            deleteLetter();
+        } else if (key === '⏎') {
+            submitGuess();
+        } else {
+            addLetter(key);
+        }
+    }
+
+    function addLetter(letter) {
+        if (currentCol < WORD_LENGTH) {
+            const cellIndex = currentRow * WORD_LENGTH + currentCol;
+            const cell = document.getElementById(`cell-${cellIndex}`);
+            cell.textContent = letter;
+            cell.classList.add('filled');
+            currentCol++;
+        }
+    }
+
+    function deleteLetter() {
+        if (currentCol > 0) {
+            currentCol--;
+            const cellIndex = currentRow * WORD_LENGTH + currentCol;
+            const cell = document.getElementById(`cell-${cellIndex}`);
+            cell.textContent = '';
+            cell.classList.remove('filled');
+        }
+    }
+
+    function submitGuess() {
+        if (currentCol !== WORD_LENGTH) {
+            showMessage(`Please enter all ${WORD_LENGTH} letters!`);
+            return;
+        }
+
+        const guess = getCurrentGuess();
+        evaluateGuess(guess);
+
+        if (guess === TARGET_WORD) {
+            showMessage('Congratulations!', 'win');
+            gameOver = true;
+        } else if (currentRow === MAX_ATTEMPTS - 1) {
+            showMessage(`Sorry! The word was: ${TARGET_WORD}`, 'lose');
+            gameOver = true;
+        } else {
+            currentRow++;
+            currentCol = 0;
+            showMessage(`Versuch ${currentRow + 1} von ${MAX_ATTEMPTS}`);
+        }
+    }
+
+    function getCurrentGuess() {
+        let guess = '';
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const cellIndex = currentRow * WORD_LENGTH + i;
+            const cell = document.getElementById(`cell-${cellIndex}`);
+            guess += cell.textContent;
+        }
+        return guess;
+    }
+
+    function evaluateGuess(guess) {
+        const targetArray = TARGET_WORD.split('');
+        const guessArray = guess.split('');
+        const letterCount = {};
+
+        // Count letters in target word
+        targetArray.forEach(letter => {
+            letterCount[letter] = (letterCount[letter] || 0) + 1;
+        });
+
+        // First pass: mark correct letters
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const cellIndex = currentRow * WORD_LENGTH + i;
+            const cell = document.getElementById(`cell-${cellIndex}`);
+
+            if (guessArray[i] === targetArray[i]) {
+                cell.classList.add('correct');
+                updateKeyboard(guessArray[i], 'correct');
+                letterCount[guessArray[i]]--;
+            }
+        }
+
+        // Second pass: mark present letters
+        for (let i = 0; i < WORD_LENGTH; i++) {
+            const cellIndex = currentRow * WORD_LENGTH + i;
+            const cell = document.getElementById(`cell-${cellIndex}`);
+
+            if (guessArray[i] !== targetArray[i]) {
+                if (letterCount[guessArray[i]] > 0) {
+                    cell.classList.add('present');
+                    updateKeyboard(guessArray[i], 'present');
+                    letterCount[guessArray[i]]--;
+                } else {
+                    cell.classList.add('absent');
+                    updateKeyboard(guessArray[i], 'absent');
+                }
+            }
+        }
+    }
+
+    function updateKeyboard(letter, status) {
+        const keys = document.querySelectorAll('.key');
+        keys.forEach(key => {
+            if (key.textContent === letter) {
+                // Don't downgrade from correct to present/absent
+                if (!key.classList.contains('correct')) {
+                    key.classList.remove('present', 'absent', 'correct');
+                    key.classList.add(status);
+                }
+            }
+        });
+    }
+
+    function showMessage(text, className = '') {
+        const messageEl = document.getElementById('message');
+        messageEl.textContent = text;
+        messageEl.className = `message ${className}`;
+    }
+
+    // Handle keyboard input
+    document.addEventListener('keydown', (e) => {
+        const key = e.key.toUpperCase();
+
+        if (key === 'BACKSPACE') {
+            handleKeyPress('⌫');
+        } else if (key === 'ENTER') {
+            handleKeyPress('⏎');
+        }
+        else if (/^\p{L}$/u.test(key) || key === '-') {
+            handleKeyPress(key);
+        }
+    });
+
+    // Initialize game
+    initializeGrid();
+    initializeKeyboard();
+    showMessage(`Guess the word! Attempt 1 of ${MAX_ATTEMPTS}`);
+</script>
+</body>
+</html>
