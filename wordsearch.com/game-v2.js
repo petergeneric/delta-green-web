@@ -156,11 +156,14 @@ class WordPuzzleGame extends HTMLElement {
     }
 
     render() {
+        const locale = this.getAttribute('locale') || 'de';
+        const isRTL = locale === 'arabic';
+        
         this.shadowRoot.innerHTML = `
             <style>
                 :host {
                     display: block;
-                    font-family: 'Arial', sans-serif;
+                    font-family: ${isRTL ? "'Noto Sans Arabic', 'Arial Unicode MS', Arial, sans-serif" : "'Arial', sans-serif"};
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     margin: 0;
                     padding: 20px;
@@ -168,6 +171,7 @@ class WordPuzzleGame extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .mode-selector {
@@ -200,6 +204,7 @@ class WordPuzzleGame extends HTMLElement {
                     text-align: center;
                     color: white;
                     margin-bottom: 20px;
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .header h1 {
@@ -221,6 +226,7 @@ class WordPuzzleGame extends HTMLElement {
                     margin-bottom: 20px;
                     text-align: center;
                     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .game-container {
@@ -293,6 +299,7 @@ class WordPuzzleGame extends HTMLElement {
                     gap: 3px;
                     max-width: 800px;
                     margin: 0 auto;
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .key {
@@ -338,6 +345,7 @@ class WordPuzzleGame extends HTMLElement {
                     margin: 10px 0;
                     font-weight: bold;
                     min-height: 20px;
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .win {
@@ -371,6 +379,7 @@ class WordPuzzleGame extends HTMLElement {
                     display: flex;
                     justify-content: center;
                     gap: 10px;
+                    direction: ${isRTL ? 'rtl' : 'ltr'};
                 }
 
                 .hangman-letter {
